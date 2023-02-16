@@ -23,6 +23,9 @@
   },
   "homepage": "https://github.com/francoismassart/node-buzzers#readme",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "tsc",
     "lint": "eslint .",
