@@ -3,21 +3,20 @@ import nodeHid from "node-hid";
 import buzzer from "./buzzer";
 import connectDevice from "./connectDevice";
 import device from "./device";
-import hardware from "./hardware";
+import hw from "./hardware";
 import getMapper from "./parser/mapDeviceDataToPressedButtons";
 import { IBuzzer } from "./types";
 
 const mapperFn = getMapper();
 
-module.exports = (singleMode = true) => {
+module.exports = (singleMode = true): IBuzzer | IBuzzer[] => {
   if (singleMode) {
     return buzzer(device(connectDevice, mapperFn));
   }
   const buzzers: IBuzzer[] = [];
   const devices = nodeHid.devices();
   const buzzDongles = devices.filter(
-    (d) =>
-      d.vendorId === hardware.VENDOR_ID && d.productId === hardware.PRODUCT_ID
+    (d) => d.vendorId === hw.VENDOR_ID && d.productId === hw.PRODUCT_ID
   );
   buzzDongles.forEach((bd) => {
     if (typeof bd?.path === "string") {
