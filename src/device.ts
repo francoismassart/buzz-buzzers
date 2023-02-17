@@ -1,7 +1,7 @@
 import nodeHid from "node-hid";
 
+import { DataMapper, IDevice } from "../types/types";
 import { ConnectDeviceType } from "./connectDevice";
-import { DataMapper, IDevice } from "./types";
 
 const Device = (connector: ConnectDeviceType, mapper: DataMapper): IDevice => {
   const hidDevice = connector(nodeHid);

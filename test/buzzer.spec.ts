@@ -2,7 +2,7 @@ import test from "ava";
 import { spy, stub } from "sinon";
 
 import createBuzzer from "../src/buzzer";
-import { BuzzerEvent } from "../src/types";
+import { BuzzerEvent } from "../types/types";
 
 const device = {
   onError: stub(),

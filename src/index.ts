@@ -1,11 +1,11 @@
 import nodeHid from "node-hid";
 
+import { IBuzzer } from "../types/types";
 import buzzer from "./buzzer";
 import connectDevice from "./connectDevice";
 import device from "./device";
 import hw from "./hardware";
 import getMapper from "./parser/mapDeviceDataToPressedButtons";
-import { IBuzzer } from "./types";
 
 const mapperFn = getMapper();
 

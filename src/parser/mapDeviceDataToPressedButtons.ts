@@ -1,4 +1,4 @@
-import { DataMapper, DataMapperMaker } from "../types";
+import { DataMapper, DataMapperMaker } from "../../types/types";
 import { mappings } from "./mappings";
 
 // Generate powers of two array

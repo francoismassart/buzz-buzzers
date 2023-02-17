@@ -23,8 +23,10 @@
   },
   "homepage": "https://github.com/francoismassart/node-buzzers#readme",
   "main": "dist/index.js",
+  "types": "types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "start": "tsc",

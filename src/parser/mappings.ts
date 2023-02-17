@@ -1,4 +1,4 @@
-import { BuzzerButtonType, BuzzerControllerType } from "../types";
+import { BuzzerButtonType, BuzzerControllerType } from "../../types/types";
 
 type MappingType = {
   bytes: [number, number];

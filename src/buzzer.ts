@@ -8,7 +8,7 @@ import {
   IDevice,
   Listeners,
   PayloadType,
-} from "./types";
+} from "../types/types";
 
 export default function Buzzer(device: IDevice): IBuzzer {
   // Array of states
