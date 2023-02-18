@@ -2,7 +2,6 @@ import test from "ava";
 import { spy, stub } from "sinon";
 
 import createBuzzer from "../src/buzzer";
-import { BuzzerEvent } from "../types/types";
 
 const device = {
   onError: stub(),
@@ -125,7 +124,7 @@ test("removeEventListener should remove added event listeners", (t) => {
   const buzzer = getBuzzer();
   const callback = spy();
   buzzer.onChange(callback);
-  buzzer.removeEventListener(BuzzerEvent.CHANGE, callback);
+  buzzer.removeEventListener("change", callback);
   const buttonStates = getButtonStates();
   buttonStates[4] = true;
 

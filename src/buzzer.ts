@@ -1,8 +1,8 @@
 import {
   BuzzerButtonType,
   BuzzerControllerType,
-  BuzzerEvent,
   BuzzerEventData,
+  BuzzerEventType,
   CallbackType,
   IBuzzer,
   IDevice,
@@ -38,10 +38,10 @@ export default function Buzzer(device: IDevice): IBuzzer {
   ];
 
   const listeners: Listeners = {
-    // [BuzzerEvent.PRESS]: [],
-    // [BuzzerEvent.RELEASE]: [],
-    // [BuzzerEvent.CHANGE]: [],
-    // [BuzzerEvent.ERROR]: []
+    // ["press"]: [],
+    // ["release"]: [],
+    // ["change"]: [],
+    // ["error"]: []
     press: [],
     release: [],
     change: [],
@@ -62,13 +62,13 @@ export default function Buzzer(device: IDevice): IBuzzer {
   };
 
   const addEventListener = (
-    eventType: BuzzerEvent,
+    eventType: BuzzerEventType,
     eventHandler: CallbackType
   ) => {
     listeners[eventType].push(eventHandler);
   };
 
-  const triggerEvent = (eventType: BuzzerEvent, payload: PayloadType) => {
+  const triggerEvent = (eventType: BuzzerEventType, payload: PayloadType) => {
     listeners[eventType].forEach((listener) => listener(payload));
   };
 
@@ -85,16 +85,16 @@ export default function Buzzer(device: IDevice): IBuzzer {
     states.forEach((state, index) => {
       const previousState = previousStates[index];
       if (state !== previousState) {
-        const eventType = state ? BuzzerEvent.PRESS : BuzzerEvent.RELEASE;
+        const eventType = state ? "press" : "release";
         triggerEvent(eventType, indexToBuzzerEventData(index));
       }
     });
-    triggerEvent(BuzzerEvent.CHANGE, states);
+    triggerEvent("change", states);
     previousStates = states;
   });
 
   device.onError(function (err) {
-    triggerEvent(BuzzerEvent.ERROR, err);
+    triggerEvent("error", err);
   });
 
   return {
@@ -104,28 +104,28 @@ export default function Buzzer(device: IDevice): IBuzzer {
       } catch (err) {
         const message =
           "Could not set led status. Older versions of the buzz buzzers do not support this.";
-        triggerEvent(BuzzerEvent.ERROR, message);
+        triggerEvent("error", message);
       }
     },
     onChange(cb) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      addEventListener(BuzzerEvent.CHANGE, cb);
+      addEventListener("change", cb);
     },
     onPress(cb) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      addEventListener(BuzzerEvent.PRESS, cb);
+      addEventListener("press", cb);
     },
     onRelease(cb) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      addEventListener(BuzzerEvent.RELEASE, cb);
+      addEventListener("release", cb);
     },
     onError(cb) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      addEventListener(BuzzerEvent.ERROR, cb);
+      addEventListener("error", cb);
     },
     removeEventListener(type, callback) {
       listeners[type] = listeners[type].filter(
