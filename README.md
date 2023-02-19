@@ -15,6 +15,7 @@ This fork:
 ## Usage
 
 Before you use this library you need to connect your buzzers:
+
 - for the wired buzzers simply plug them in
 - for the wireless Playsation Buzz Buzzers, first plug in the USB dongle of your buzzers. Connect/pair your controllers (see below for hints on that).
 
@@ -23,7 +24,7 @@ Then you can use this library like this:
 ### Examples
 
 ```js
-var nodeBuzzers = require('node-buzzers');
+var nodeBuzzers = require("node-buzzers");
 var buzzers = nodeBuzzers();
 var ledLight = true;
 
@@ -35,24 +36,28 @@ setInterval(function () {
 }, 500);
 
 // Get notified when a button is pressed
-buzzers.onPress(function(ev) {
-	// ev is an object with two attributes:
-	// - controller: Number from 1 to 4
-	// - button: Number from 0 to 4. 0 is the big red button.
-	console.log('Button ' + ev.button + ' on controller ' + ev.controller + ' pressed');
+buzzers.onPress(function (ev) {
+  // ev is an object with two attributes:
+  // - controller: Number from 1 to 4
+  // - button: Number from 0 to 4. 0 is the big red button.
+  console.log(
+    "Button " + ev.button + " on controller " + ev.controller + " pressed"
+  );
 });
 
 // Get notified when a button is released
-buzzers.onRelease(function(ev) {
-	console.log('Button ' + ev.button + ' on controller ' + ev.controller + ' released');
+buzzers.onRelease(function (ev) {
+  console.log(
+    "Button " + ev.button + " on controller " + ev.controller + " released"
+  );
 });
 
 // Get notified whenever something changes
-buzzers.onChange(function(state) {
-	// state is an array of booleans with all buttons
-	// false means the button is not pressed
-	// and true when a button is pressed
-	/* An example could look like this, in this case the second color button
+buzzers.onChange(function (state) {
+  // state is an array of booleans with all buttons
+  // false means the button is not pressed
+  // and true when a button is pressed
+  /* An example could look like this, in this case the second color button
 	of controller 2 was pressed and the big red button on controller four is pressed
 	[
         false, false, false, false, false, // first controller
@@ -64,8 +69,8 @@ buzzers.onChange(function(state) {
 });
 
 // Get notified when an error happens
-buzzers.onError(function(err) {
-	console.log('Error: ', err);
+buzzers.onError(function (err) {
+  console.log("Error: ", err);
 });
 
 // Remove event listeners
@@ -83,6 +88,7 @@ First you have to initialize the buzzers:
 `buzzers` now has the following API:
 
 ### `onPress(callback)`
+
 Register a callback that is called whenever a button is pressed. It will be called with an event object in this format:
 
 ```
@@ -133,9 +139,16 @@ To light up the red LEDs of a buzzer. Pass in `true` to switch a light on and `f
 
 ## Changelog
 
+### 2.2.0
+
+- Migration to TypeScript with types and IntelliSense
+- Better performances by using `Set` instead of array for storing event listeners
+
 ### 2.1.0
+
 - Support for multiple USB dongles (see `examples/multi-blink.js`)
 
 ### 2.0.0
+
 - Forked version from [functino/buzz-buzzers](https://github.com/functino/buzz-buzzers)
 - Works with Node 16 and has updated dependencies
