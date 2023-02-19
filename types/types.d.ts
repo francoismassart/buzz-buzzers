@@ -65,6 +65,9 @@ export type CallbackType = (payload: PayloadType) => void;
 type ChangeCallbackType = (states: boolean[] /* 20 */) => void;
 /** The specific callback for an "error" event */
 type ErrorCallbackType = (message: string) => void;
+/** The specific callback for an "press" or "release" event */
+type PushCallbackType = (payload: BuzzerEventData) => void;
+
 /** The array of 4 booleans with LED status */
 type IDeviceLeds = [boolean, boolean, boolean, boolean];
 
@@ -87,14 +90,11 @@ export interface IDevice {
   setLeds(ledStates: IDeviceLeds): void;
 }
 
-/** The listeners storage */
-export interface Listeners {
-  /** The array of press handlers */
-  press: ((payload: PayloadType) => void)[];
-  /** The array of release handlers */
-  release: ((payload: PayloadType) => void)[];
-  /** The array of change handlers */
-  change: ((payload: PayloadType) => void)[];
-  /** The array of error handlers */
-  error: ((payload: PayloadType) => void)[];
-}
+/** The change handlers */
+export type ChangeListeners = Set<ChangeCallbackType>;
+/** The error handlers */
+export type ErrorListeners = Set<ErrorCallbackType>;
+/** The press handlers */
+export type PressListeners = Set<PushCallbackType>;
+/** The release handlers */
+export type ReleaseListeners = Set<PushCallbackType>;

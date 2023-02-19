@@ -3,11 +3,13 @@ import {
   BuzzerControllerType,
   BuzzerEventData,
   BuzzerEventType,
-  CallbackType,
+  ChangeListeners,
+  ErrorListeners,
   IBuzzer,
   IDevice,
-  Listeners,
   PayloadType,
+  PressListeners,
+  ReleaseListeners,
 } from "../types/types";
 
 export default function Buzzer(device: IDevice): IBuzzer {
@@ -37,20 +39,10 @@ export default function Buzzer(device: IDevice): IBuzzer {
     false,
   ];
 
-  const listeners: Listeners = {
-    // ["press"]: [],
-    // ["release"]: [],
-    // ["change"]: [],
-    // ["error"]: []
-    press: [],
-    release: [],
-    change: [],
-    error: [],
-  };
-
-  const isStates = (states: PayloadType): states is boolean[] => {
-    return typeof states !== "string" && "length" in states;
-  };
+  const changeListeners: ChangeListeners = new Set();
+  const errorListeners: ErrorListeners = new Set();
+  const pressListeners: PressListeners = new Set();
+  const releaseListeners: ReleaseListeners = new Set();
 
   const indexToBuzzerEventData = (index: number): BuzzerEventData => {
     const buttons = 5;
@@ -61,15 +53,24 @@ export default function Buzzer(device: IDevice): IBuzzer {
     };
   };
 
-  const addEventListener = (
-    eventType: BuzzerEventType,
-    eventHandler: CallbackType
-  ) => {
-    listeners[eventType].push(eventHandler);
-  };
-
   const triggerEvent = (eventType: BuzzerEventType, payload: PayloadType) => {
-    listeners[eventType].forEach((listener) => listener(payload));
+    switch (eventType) {
+      case "change":
+        changeListeners.forEach((listener) => listener(payload as boolean[]));
+        break;
+      case "error":
+        errorListeners.forEach((listener) => listener(payload as string));
+        break;
+      case "press":
+        pressListeners.forEach((listener) =>
+          listener(payload as BuzzerEventData)
+        );
+        break;
+      case "release":
+        releaseListeners.forEach((listener) =>
+          listener(payload as BuzzerEventData)
+        );
+    }
   };
 
   // Turn off all leds by default
@@ -80,8 +81,6 @@ export default function Buzzer(device: IDevice): IBuzzer {
   }
 
   device.onChange((states) => {
-    if (!states) return;
-    if (!isStates(states)) return;
     states.forEach((state, index) => {
       const previousState = previousStates[index];
       if (state !== previousState) {
@@ -108,29 +107,32 @@ export default function Buzzer(device: IDevice): IBuzzer {
       }
     },
     onChange(cb) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      addEventListener("change", cb);
-    },
-    onPress(cb) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      addEventListener("press", cb);
-    },
-    onRelease(cb) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      addEventListener("release", cb);
+      changeListeners.add(cb);
     },
     onError(cb) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      addEventListener("error", cb);
+      errorListeners.add(cb);
+    },
+    onPress(cb) {
+      pressListeners.add(cb);
+    },
+    onRelease(cb) {
+      releaseListeners.add(cb);
     },
     removeEventListener(type, callback) {
-      listeners[type] = listeners[type].filter(
-        (listener) => listener !== callback
-      );
+      switch (type) {
+        case "change":
+          changeListeners.delete(callback);
+          break;
+        case "error":
+          errorListeners.delete(callback);
+          break;
+        case "press":
+          pressListeners.delete(callback);
+          break;
+        case "release":
+          releaseListeners.delete(callback);
+          break;
+      }
     },
   };
 }

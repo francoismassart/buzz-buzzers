@@ -31,6 +31,7 @@
   "scripts": {
     "start": "tsc",
     "lint": "eslint .",
+    "predev": "npm run start",
     "dev": "node examples/simple",
     "test": "ava test",
     "test:coverage": "nyc ava test",
