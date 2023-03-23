@@ -139,6 +139,10 @@ To light up the red LEDs of a buzzer. Pass in `true` to switch a light on and `f
 
 ## Changelog
 
+### 2.3.0
+
+- New option `reduceSetLeds` aiming to reduce `setLeds` calls by saving the previous states and only updating leds when required.
+
 ### 2.2.0
 
 - Migration to TypeScript with types and IntelliSense

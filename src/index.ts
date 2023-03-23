@@ -9,9 +9,12 @@ import getMapper from "./parser/mapDeviceDataToPressedButtons";
 
 const mapperFn = getMapper();
 
-module.exports = (singleMode = true): IBuzzer | IBuzzer[] => {
+module.exports = (
+  singleMode = true,
+  reduceSetLeds = false
+): IBuzzer | IBuzzer[] => {
   if (singleMode) {
-    return buzzer(device(connectDevice, mapperFn));
+    return buzzer(device(connectDevice, mapperFn), reduceSetLeds);
   }
   const buzzers: IBuzzer[] = [];
   const devices = nodeHid.devices();
@@ -21,7 +24,10 @@ module.exports = (singleMode = true): IBuzzer | IBuzzer[] => {
   buzzDongles.forEach((bd) => {
     if (typeof bd?.path === "string") {
       buzzers.push(
-        buzzer(device(() => new nodeHid.HID(`${bd.path}`), mapperFn))
+        buzzer(
+          device(() => new nodeHid.HID(`${bd.path}`), mapperFn),
+          reduceSetLeds
+        )
       );
     }
   });

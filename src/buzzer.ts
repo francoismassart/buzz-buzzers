@@ -12,7 +12,10 @@ import {
   ReleaseListeners,
 } from "../types/types";
 
-export default function Buzzer(device: IDevice): IBuzzer {
+export default function Buzzer(
+  device: IDevice,
+  reduceSetLeds = false
+): IBuzzer {
   // Array of states
   // `false` means the button is not pressed
   // and `true` when a button is pressed
@@ -38,6 +41,8 @@ export default function Buzzer(device: IDevice): IBuzzer {
     false,
     false,
   ];
+
+  let previousLedStatesStr = "";
 
   const changeListeners: ChangeListeners = new Set();
   const errorListeners: ErrorListeners = new Set();
@@ -76,6 +81,7 @@ export default function Buzzer(device: IDevice): IBuzzer {
   // Turn off all leds by default
   try {
     device.setLeds([false, false, false, false]);
+    previousLedStatesStr = "false-false-false-false";
   } catch (err) {
     // older versions don't have an led
   }
@@ -98,8 +104,14 @@ export default function Buzzer(device: IDevice): IBuzzer {
 
   return {
     setLeds(led1, led2, led3, led4) {
+      const newLedStates = `${led1}-${led2}-${led3}-${led4}`;
+      if (reduceSetLeds && newLedStates === previousLedStatesStr) {
+        // Prevent useless update of Led to enhance perfs
+        return;
+      }
       try {
         device.setLeds([led1, led2, led3, led4]);
+        previousLedStatesStr = newLedStates;
       } catch (err) {
         const message =
           "Could not set led status. Older versions of the buzz buzzers do not support this.";
