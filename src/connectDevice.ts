@@ -7,6 +7,11 @@ function findDeviceByName(nodeHidLib: any) {
   const buzzDevice = nodeHidLib
     .devices()
     .find((d: nodeHid.Device) => d?.product?.match(/Buzz/));
+
+  if (!buzzDevice) {
+    throw new Error("No device found! Please connect a device first.");
+  }
+
   return new nodeHidLib.HID(buzzDevice.vendorId, buzzDevice.productId);
 }
 
