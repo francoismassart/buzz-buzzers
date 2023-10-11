@@ -1,4 +1,4 @@
 export default {
   VENDOR_ID: 1356,
-  PRODUCT_ID: 4096,
+  PRODUCT_IDS: [2, 4096],
 };

@@ -15,9 +15,13 @@ export type ConnectDeviceType = (nodeHidLib: any) => nodeHid.HID;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function (nodeHidLib: any): nodeHid.HID {
-  try {
-    return new nodeHidLib.HID(hardware.VENDOR_ID, hardware.PRODUCT_ID);
-  } catch (err) {
-    return findDeviceByName(nodeHidLib);
+  const device = nodeHid.devices().filter(
+    (d) => d.vendorId === hardware.VENDOR_ID && hardware.PRODUCT_IDS.includes(d.productId)
+  )[0];
+
+  if (device) {
+    return new nodeHidLib.HID(device.vendorId, device.productId);
   }
+
+  return findDeviceByName(nodeHidLib);
 }
